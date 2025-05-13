@@ -43,7 +43,7 @@ public class UserController {
 		model.addAttribute("enrolledCourseIds", enrolledCourseIds);
 		model.addAttribute("activePage", "courses");
 
-		return "/user/courses";
+		return "user/courses";
 	}
 
 	@PostMapping("/enroll-course")
@@ -54,7 +54,7 @@ public class UserController {
 		// Enroll the user in the course
 		da.enrollCourse(id, userId);
 
-		return "/user/enroll-course";
+		return "user/enroll-course";
 	}
 
 	@GetMapping("/study-course/{courseId}")
@@ -81,7 +81,7 @@ public class UserController {
 		model.addAttribute("completedPercentage", completedPercentage);
 		model.addAttribute("activePage", "enrolled-courses");
 
-		return "/user/study-course";
+		return "user/study-course";
 	}
 
 	@GetMapping("/enrolled-courses")
@@ -91,7 +91,7 @@ public class UserController {
 		System.out.println(da.getEnrolledCourses(userId));
 		model.addAttribute("userId", userId);
 		model.addAttribute("activePage", "enrolled-courses");
-		return "/user/enrolled-courses";
+		return "user/enrolled-courses";
 	}
 
 	@GetMapping("/study-course/{courseId}/lesson/{lessonId}")
@@ -148,7 +148,7 @@ public class UserController {
 		model.addAttribute("completedLessonsCount", completedCount);
 		model.addAttribute("completedPercentage", completedPercentage);
 		model.addAttribute("activePage", "enrolled-courses");
-		return "/user/study-course";
+		return "user/study-course";
 	}
 
 	@PostMapping("/mark-lesson-complete/{courseId}/{lessonId}")

@@ -1,0 +1,11 @@
+target/
+.git/
+.gitignore
+.idea/
+*.iml
+*.log
+*.class
+.DS_Store
+*.zip
+*.tar
+*.tar.gz
