@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${course.title} + ' - Study Course'">Study
+	Course</title>
+	 <link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<!-- Header with navigation -->
+	<header class="main-header">
+		<div class="container">
+			<div class="nav-container">
+				<a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn
+				</a>
+
+				<button class="mobile-menu-button" id="menuToggle">
+					<i class="fas fa-bars"></i>
+				</button>
+
+				<nav class="main-nav">
+					<ul id="navLinks">
+						<li><a th:href="@{/courses}"
+							th:class="${activePage == 'courses'} ? 'active' : ''">All
+								Courses</a></li>
+						<li><a th:href="@{/enrolled-courses}"
+							th:class="${activePage == 'enrolled-courses'} ? 'active' : ''">My
+								Courses</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="page-header">
+			<h1 class="page-title" th:text="${course.title}">Course Title</h1>
+			<p th:text="${course.description}">Course description will appear
+				here.</p>
+
+			<!-- Progress bar -->
+			<div th:if="${totalLessons > 0}">
+				<div class="progress-bar">
+					<div class="progress-fill"
+						th:style="'width:' + ${completedPercentage} + '%'"></div>
+				</div>
+				<div class="progress-stats">
+					<span
+						th:text="${completedLessonsCount} + ' of ' + ${totalLessons} + ' lessons completed'"></span>
+					<span th:text="${completedPercentage} + '% complete'"></span>
+				</div>
+			</div>
+
+			<!-- Course completion message - only shows when 100% complete -->
+			<div th:if="${completedPercentage == 100}"
+				class="course-complete-banner">
+				<div class="complete-icon">
+					<i class="fas fa-trophy"></i>
+				</div>
+				<div class="complete-message">
+					<h3>Congratulations! You've completed this course!</h3>
+					<p>
+						You've mastered all the lessons in <strong
+							th:text="${course.title}">this course</strong>.
+					</p>
+					<a th:href="@{/enrolled-courses}" class="btn btn-primary"> <i
+						class="fas fa-graduation-cap"></i> View All My Courses
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="course-layout">
+			<!-- Sidebar with lessons -->
+			<div class="sidebar">
+				<h2 class="sidebar-title">Lessons</h2>
+				<ul class="lesson-list">
+					<li th:each="lesson : ${lessons}"
+						th:class="${lesson.id == activeLesson?.id ? 'active' : ''} + ' ' + ${completedLessons.contains(lesson.id) ? 'completed' : ''}">
+						<a
+						th:href="@{/study-course/{courseId}/lesson/{lessonId}(courseId=${course.id}, lessonId=${lesson.id})}"
+						th:text="${lesson.title}">Lesson Title</a> <span
+						class="lesson-status"
+						th:if="${completedLessons.contains(lesson.id)}"> <i
+							class="fas fa-check-circle"></i>
+					</span>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Main content area -->
+			<div class="content-area">
+				<!-- Display lesson content if a lesson is active -->
+				<div th:if="${activeLesson != null}" class="lesson-content-wrapper">
+					<div class="lesson-header">
+						<h2 class="lesson-title" th:text="${activeLesson.title}">Lesson
+							Title</h2>
+					</div>
+
+					<!-- YouTube Video - only displays if a video ID exists -->
+					<div th:if="${activeLesson.introVideoId != null}"
+						class="video-container">
+						<iframe width="560" height="315"
+							th:src="'https://www.youtube.com/embed/' + ${activeLesson.introVideoId}"
+							title="YouTube video player" frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowfullscreen></iframe>
+					</div>
+
+					<div class="lesson-content" th:utext="${activeLesson.content}">
+						Lesson content will appear here.</div>
+
+					<!-- Mark as complete button or completed message -->
+					<div class="completion-box"
+						th:classappend="${completedLessons.contains(activeLesson.id) ? 'completed' : ''}">
+						<div th:if="${!completedLessons.contains(activeLesson.id)}">
+							<span>Ready to mark this lesson as complete?</span>
+						</div>
+						<div th:if="${completedLessons.contains(activeLesson.id)}">
+							<span><i class="fas fa-check-circle"></i> You've completed
+								this lesson!</span>
+						</div>
+
+						<div>
+							<form th:if="${!completedLessons.contains(activeLesson.id)}"
+								th:action="@{/mark-lesson-complete/{courseId}/{lessonId}(courseId=${course.id}, lessonId=${activeLesson.id})}"
+								method="post">
+								<button type="submit" class="btn btn-success">Mark as
+									Complete</button>
+							</form>
+						</div>
+					</div>
+
+					<!-- Lesson navigation -->
+					<div class="lesson-navigation">
+						<a th:if="${previousLesson != null}"
+							th:href="@{/study-course/{courseId}/lesson/{lessonId}(courseId=${course.id}, lessonId=${previousLesson.id})}"
+							class="btn btn-outline"> <i class="fas fa-arrow-left"></i>
+							Previous Lesson
+						</a> <span th:if="${previousLesson == null}"></span> <a
+							th:if="${nextLesson != null}"
+							th:href="@{/study-course/{courseId}/lesson/{lessonId}(courseId=${course.id}, lessonId=${nextLesson.id})}"
+							class="btn btn-primary"> Next Lesson <i
+							class="fas fa-arrow-right"></i>
+						</a> <span th:if="${nextLesson == null}"></span>
+					</div>
+				</div>
+
+				<!-- No lesson selected state -->
+				<div th:if="${activeLesson == null}" class="empty-state">
+					<i class="fas fa-book-open empty-icon"></i>
+					<h3 class="empty-title">Select a lesson to start learning</h3>
+					<p class="empty-description">Choose a lesson from the sidebar
+						to begin your learning journey.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Mobile menu toggle
+		document.getElementById('menuToggle').addEventListener(
+				'click',
+				function() {
+					document.getElementById('navLinks').classList
+							.toggle('active');
+				});
+	</script>
+</body>
+</html>

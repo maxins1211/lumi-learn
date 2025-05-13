@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - LumiLearn</title>
+<link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+	/* Primary Colors */
+	--primary-color: #8b5cf6; /* Vibrant purple */
+	--primary-hover: #a78bfa; /* Lighter purple */
+	--secondary-color: #4f46e5; /* Indigo */
+	/* Background Colors */
+	--dark-bg: #111827; /* Dark blue-gray background */
+	--card-bg: #1f2937; /* Medium blue-gray card background */
+	--border-color: #374151; /* Darker blue-gray border */
+	/* Text Colors */
+	--text-color: #f3f4f6; /* Bright off-white text */
+	--text-light: #b0b7c4; /* Light blue-gray text */
+	/* Accent Colors */
+	--success-color: #10b981; /* Keep same green */
+	--accent-color: #f59e0b; /* Keep same amber */
+	--danger-color: #ef4444; /* Keep same red */
+	--info-color: #60a5fa; /* Slightly lighter blue */
+	/* Effects */
+	--shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+	/* Code Highlighting */
+	--code-bg: #272c36;
+	--code-text: #e5e7eb;
+	/* Highlight Color for Selected Text */
+	--highlight-bg: rgba(139, 92, 246, 0.3);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	line-height: 1.6;
+	color: var(--text-color);
+	background-color: var(--dark-bg);
+}
+
+a {
+	text-decoration: none;
+	color: var(--primary-color);
+}
+
+/* Layout containers */
+.container {
+	width: 90%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+/* Header and navigation */
+.main-header {
+	background: var(--card-bg);
+	box-shadow: var(--shadow);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.nav-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 0;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: var(--primary-color);
+	text-decoration: none;
+}
+
+.logo i {
+	margin-right: 8px;
+	color: var(--primary-color);
+}
+
+.logo:hover {
+	color: var(--primary-hover);
+}
+
+.logo:hover i {
+	color: var(--primary-hover);
+}
+
+.main-nav ul {
+	display: flex;
+	list-style: none;
+	align-items: center;
+}
+
+.main-nav li {
+	margin-left: 30px;
+}
+
+.main-nav a {
+	color: var(--text-color);
+	font-weight: 500;
+	transition: color 0.3s;
+}
+
+.main-nav a:hover, .main-nav a.active {
+	color: var(--primary-color);
+}
+
+.auth-buttons {
+	display: flex;
+	gap: 10px;
+}
+
+.btn {
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-weight: 500;
+	display: inline-block;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.btn-primary {
+	background-color: var(--primary-color);
+	color: white;
+	border: 2px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+	background-color: var(--primary-hover);
+	border-color: var(--primary-hover);
+}
+
+.btn-outline {
+	background: transparent;
+	color: var(--text-color);
+	border: 2px solid var(--text-light);
+}
+
+.btn-outline:hover {
+	border-color: var(--primary-color);
+	color: var(--primary-color);
+}
+
+.mobile-menu-button {
+	display: none;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: var(--text-color);
+}
+
+/* Auth Forms */
+.auth-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: calc(100vh - 76px - 60px);
+	/* Adjust for header and footer height */
+	padding: 40px 0;
+}
+
+.auth-container {
+	background-color: var(--card-bg);
+	border-radius: 10px;
+	box-shadow: var(--shadow);
+	padding: 35px;
+	width: 100%;
+	max-width: 450px;
+}
+
+.auth-header {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.auth-title {
+	font-size: 2rem;
+	color: var(--text-color);
+	margin-bottom: 10px;
+}
+
+.auth-subtitle {
+	color: var(--text-light);
+	font-size: 1rem;
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.form-group label {
+	font-weight: 500;
+	color: var(--text-color);
+}
+
+.form-group input {
+	padding: 12px 15px;
+	border-radius: 6px;
+	border: 1px solid var(--border-color);
+	background-color: var(--dark-bg);
+	color: var(--text-color);
+	font-size: 1rem;
+	transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+	outline: none;
+	border-color: var(--primary-color);
+}
+
+.form-error {
+	color: var(--danger-color);
+	font-size: 0.9rem;
+	margin-top: 5px;
+}
+
+.password-strength {
+	height: 5px;
+	background-color: var(--border-color);
+	border-radius: 3px;
+	margin-top: 5px;
+	overflow: hidden;
+}
+
+.password-strength-meter {
+	height: 100%;
+	width: 0;
+	transition: width 0.3s, background-color 0.3s;
+}
+
+.weak {
+	background-color: var(--danger-color);
+	width: 33%;
+}
+
+.medium {
+	background-color: var(--accent-color);
+	width: 66%;
+}
+
+.strong {
+	background-color: var(--success-color);
+	width: 100%;
+}
+
+.form-submit {
+	margin-top: 15px;
+}
+
+.form-submit .btn {
+	width: 100%;
+	padding: 12px;
+	font-size: 1rem;
+	text-align: center;
+}
+
+.auth-footer {
+	margin-top: 25px;
+	text-align: center;
+	color: var(--text-light);
+}
+
+.auth-footer a {
+	color: var(--primary-color);
+	font-weight: 500;
+}
+
+.auth-footer a:hover {
+	color: var(--primary-hover);
+}
+
+/* Footer */
+.footer {
+	background-color: var(--card-bg);
+	padding: 20px 0;
+	text-align: center;
+}
+
+.copyright {
+	color: var(--text-light);
+	font-size: 0.9rem;
+}
+
+.auth-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: calc(100vh - 76px - 60px);
+	/* Adjust for header and footer height */
+	padding: 40px 0;
+}
+
+.auth-container {
+	background-color: var(--card-bg);
+	border-radius: 10px;
+	box-shadow: var(--shadow);
+	padding: 35px;
+	width: 100%;
+	max-width: 450px;
+	margin: 0 auto;
+}
+
+/* Responsive */
+@media ( max-width : 768px) {
+	.main-nav {
+		position: fixed;
+		top: 70px;
+		left: 0;
+		width: 100%;
+		background-color: var(--card-bg);
+		padding: 20px;
+		box-shadow: 0 15px 15px rgba(0, 0, 0, 0.1);
+		display: none;
+		z-index: 99;
+	}
+	.main-nav.active {
+		display: block;
+	}
+	.main-nav ul {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.main-nav li {
+		margin: 10px 0;
+		width: 100%;
+	}
+	.auth-buttons {
+		margin-top: 15px;
+		gap: 10px;
+	}
+	.mobile-menu-button {
+		display: block;
+	}
+}
+</style>
+</head>
+<body>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="container nav-container">
+			<a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn
+			</a>
+			<nav class="main-nav">
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/courses">Courses</a></li>
+					<li><a href="/">About</a></li>
+					<li><a href="/">Contact</a></li>
+					<li class="auth-buttons"><a href="/login"
+						class="btn btn-outline">Login</a></li>
+				</ul>
+			</nav>
+			<button class="mobile-menu-button">
+				<i class="fas fa-bars"></i>
+			</button>
+		</div>
+	</header>
+
+	<!-- Signup Form -->
+	<section class="auth-page">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join LumiLearn and start your learning journey</p>
+            </div>
+            
+            <!-- Display error message if exists -->
+            <div th:if="${errorMessage}" class="alert alert-danger" style="color: var(--danger-color); margin-bottom: 20px; padding: 10px; border-radius: 6px; background-color: rgba(239, 68, 68, 0.1);">
+                <p th:text="${errorMessage}"></p>
+            </div>
+            
+            <form class="auth-form" id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <span class="form-error" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="encryptedPassword">Password</label>
+                    <input type="password" id="encryptedPassword" name="encryptedPassword" placeholder="Create a password" required>
+                    <span class="form-error" id="passwordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                    <span class="form-error" id="confirmPasswordError"></span>
+                </div>
+
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a th:href="@{/login}" class="auth-link">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="copyright">
+				<p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- JavaScript -->
+	<script>
+		document
+				.addEventListener(
+						'DOMContentLoaded',
+						function() {
+							// Mobile menu toggle
+							const mobileMenuBtn = document
+									.querySelector('.mobile-menu-button');
+							const mainNav = document.querySelector('.main-nav');
+
+							if (mobileMenuBtn) {
+								mobileMenuBtn.addEventListener('click',
+										function() {
+											mainNav.classList.toggle('active');
+											mobileMenuBtn.classList
+													.toggle('active');
+										});
+							}
+
+							const signupForm = document.getElementById('signupForm');
+						    
+						    if (signupForm) {
+						        signupForm.addEventListener('submit', function(event) {
+						            // Reset previous error messages
+						            document.querySelectorAll('.form-error').forEach(element => {
+						                element.textContent = '';
+						            });
+						            
+						            let isValid = true;
+						            
+						            // Get form fields
+						            const password = document.getElementById('encryptedPassword').value;
+						            const confirmPassword = document.getElementById('confirmPassword').value;
+						            
+						            // Check if passwords match
+						            if (password !== confirmPassword) {
+						                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+						                isValid = false;
+						            }
+						            
+						            // Prevent form submission if validation fails
+						            if (!isValid) {
+						                event.preventDefault();
+						            }
+						        });
+						    }
+						});
+	</script>
+</body>
+</html>

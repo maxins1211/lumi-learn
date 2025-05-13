@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Available Courses</title>
+<link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<!-- Header with navigation -->
+	<header class="main-header">
+		<div class="container">
+			<div class="nav-container">
+				<a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn
+				</a>
+
+				<button class="mobile-menu-button" id="menuToggle">
+					<i class="fas fa-bars"></i>
+				</button>
+
+				<nav class="main-nav">
+					<ul id="navLinks">
+                        <li><a th:href="@{/user/courses}" th:class="${activePage == 'courses'} ? 'active' : ''">All Courses</a></li>
+                        <li><a th:href="@{/user/enrolled-courses}" th:class="${activePage == 'enrolled-courses'} ? 'active' : ''">My Courses</a></li>
+                       <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/admin/courses}" th:class="${activePage == 'admin'} ? 'active' : ''">Admin</a>
+                        </li>
+                        <li class="nav-item-logout">
+                            <form th:action="@{/logout}" method="post" class="logout-form">
+                                <button type="submit" class="logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="page-header">
+			<h1 class="page-title">Available Courses</h1>
+			<p>Browse our selection of courses and start learning today.</p>
+		</div>
+
+		<div class="course-grid">
+			<!-- Loop through courses -->
+			<div class="course-card" th:each="course : ${courses}">
+				<!-- Course thumbnail -->
+				<div class="course-image"
+					th:style="${course.imageUrl != null} ? 'background-image: url(' + ${course.imageUrl} + ')' : 'background-image: url(/images/default-course.jpg)'"></div>
+
+				<div class="course-content">
+					<h3 class="course-title" th:text="${course.title}">Course
+						Title</h3>
+					<p class="course-description" th:text="${course.description}">Course
+						description will appear here.</p>
+
+					<div class="course-actions">
+						<!-- Conditional rendering based on enrollment status -->
+						<div th:if="${enrolledCourseIds.contains(course.id)}">
+							<a th:href="@{/user/study-course/{id}(id=${course.id})}"
+								class="btn btn-primary btn-block"> Continue Learning </a>
+						</div>
+						<div th:unless="${enrolledCourseIds.contains(course.id)}">
+							<!-- Enroll button -->
+							<form th:action="@{/user/enroll-course}" method="post">
+								<input type="hidden" name="id" th:value="${course.id}" />
+								<button type="submit" class="btn btn-primary btn-block">Enroll
+									Now</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Empty state message -->
+		<div class="empty-state" th:if="${courses.empty}">
+			<i class="fas fa-book-open empty-icon"></i>
+			<h3 class="empty-title">No courses available</h3>
+			<p class="empty-description">There are no courses available at
+				the moment. Please check back later.</p>
+		</div>
+	</div>
+ <footer class="footer">
+        <div class="container">
+            <div class="copyright">
+                <p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+            </div>
+        </div>
+    </footer>
+
+	<script>
+		// Mobile menu toggle
+		document.getElementById('menuToggle').addEventListener(
+				'click',
+				function() {
+					document.getElementById('navLinks').classList
+							.toggle('active');
+				});
+	</script>
+</body>
+</html>

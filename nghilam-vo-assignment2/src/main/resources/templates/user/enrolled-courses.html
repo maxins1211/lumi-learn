@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Enrolled Courses</title>
+<link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<!-- Header with navigation -->
+	<header class="main-header">
+		<div class="container">
+			<div class="nav-container">
+				<a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn
+				</a>
+
+				<button class="mobile-menu-button" id="menuToggle">
+					<i class="fas fa-bars"></i>
+				</button>
+
+				<nav class="main-nav">
+					<ul id="navLinks">
+						<li><a th:href="@{/user/courses}"
+							th:class="${activePage == 'courses'} ? 'active' : ''">All
+								Courses</a></li>
+						<li><a th:href="@{/user/enrolled-courses}"
+							th:class="${activePage == 'enrolled-courses'} ? 'active' : ''">My
+								Courses</a></li>
+						<li sec:authorize="hasRole('ADMIN')"><a
+							th:href="@{/admin/courses}"
+							th:class="${activePage == 'admin'} ? 'active' : ''">Admin</a></li>
+						<li class="nav-item-logout">
+							<form th:action="@{/logout}" method="post" class="logout-form">
+								<button type="submit" class="logout-btn">
+									<i class="fas fa-sign-out-alt"></i> Logout
+								</button>
+							</form>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="page-header">
+			<h1 class="page-title">My Enrolled Courses</h1>
+			<p>Continue learning where you left off.</p>
+		</div>
+
+		<div class="course-grid">
+			<div class="course-card" th:each="course : ${enrolledCourses}">
+				<div class="course-image"
+					th:style="${course.imageUrl != null} ? 'background-image: url(' + ${course.imageUrl} + ')' : 'background-image: url(/images/default-course.jpg)'">
+					<span class="course-badge"
+						th:text="${@databaseAccess.getCourseCompletionPercentage(userId, course.id) + '%'}"></span>
+				</div>
+
+				<div class="course-content">
+					<!-- Complete tag -->
+					<span class="completed-tag"
+						th:if="${@databaseAccess.getCourseCompletionPercentage(userId, course.id) == 100}">
+						<i class="fas fa-check-circle"></i> Completed
+					</span>
+
+					<h3 class="course-title" th:text="${course.title}">Course
+						Title</h3>
+					<p class="course-description" th:text="${course.description}">Course
+						description will appear here.</p>
+
+					<div class="course-progress">
+						<!-- Progress bar -->
+						<div class="progress-bar">
+							<div class="progress-fill"
+								th:style="'width: ' + ${@databaseAccess.getCourseCompletionPercentage(userId, course.id)} + '%'"></div>
+						</div>
+
+						<!-- Progress stats -->
+						<div class="progress-stats">
+							<span
+								th:text="${@databaseAccess.getCompletedLessonCount(userId, course.id)} + ' / ' + ${@databaseAccess.getTotalLessonCount(course.id)} + ' lessons'"></span>
+							<span
+								th:text="${@databaseAccess.getCourseCompletionPercentage(userId, course.id)} + '% complete'"></span>
+						</div>
+					</div>
+
+					<div class="course-actions">
+						<a th:href="@{/user/study-course/{id}(id=${course.id})}"
+							class="btn btn-primary btn-block"> Continue Learning </a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Empty state message -->
+		<div class="empty-state" th:if="${enrolledCourses.empty}">
+			<i class="fas fa-graduation-cap empty-icon"></i>
+			<h3 class="empty-title">No enrolled courses</h3>
+			<p class="empty-description">You haven't enrolled in any courses
+				yet.</p>
+			<a th:href="@{/user/courses}" class="btn btn-primary">Browse
+				Courses</a>
+		</div>
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<div class="copyright">
+				<p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Mobile menu toggle
+		document.getElementById('menuToggle').addEventListener(
+				'click',
+				function() {
+					document.getElementById('navLinks').classList
+							.toggle('active');
+				});
+	</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - LumiLearn</title>
+    <link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .access-denied-container {
+            max-width: 600px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 40px 25px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .access-denied-icon {
+            font-size: 72px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        .access-denied-title {
+            font-size: 28px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .access-denied-message {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-back:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        @media (max-width: 768px) {
+            .access-denied-container {
+                margin: 40px auto;
+                padding: 30px 20px;
+            }
+            
+            .access-denied-icon {
+                font-size: 60px;
+            }
+            
+            .access-denied-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <header class="main-header">
+        <div class="container">
+            <div class="nav-container">
+                <a th:href="@{/}" class="logo">
+                    <i class="fas fa-lightbulb"></i>LumiLearn
+                </a>
+
+                <button class="mobile-menu-button" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <nav class="main-nav">
+                    <ul id="navLinks">
+                        <li><a th:href="@{/courses}">All Courses</a></li>
+                        <li><a th:href="@{/enrolled-courses}">My Courses</a></li>
+                        <li><a th:href="@{/login}">Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="access-denied-container">
+            <i class="fas fa-lock access-denied-icon"></i>
+            <h1 class="access-denied-title">Access Denied</h1>
+            <p class="access-denied-message">
+                Sorry, you don't have permission to access this page.
+                Please log in with the appropriate credentials or contact the administrator if you believe this is a mistake.
+            </p>
+            <div class="action-buttons">
+               <!-- <a th:href="@{/login}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </a> --> 
+                <a th:href="@{/}" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="copyright">
+                <p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Basic JavaScript for mobile menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-button');
+            const mainNav = document.querySelector('.main-nav');
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
+                    mobileMenuBtn.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

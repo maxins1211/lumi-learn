@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${isEditMode ? 'Edit Lesson' : 'Add New Lesson'}">Lesson
+	Form</title>
+<link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<style>
+.form-container {
+	background-color: var(--card-bg);
+	border-radius: 8px;
+	box-shadow: var(--shadow);
+	padding: 30px;
+	margin-bottom: 30px;
+}
+
+.form-title {
+	margin-bottom: 20px;
+	color: var(--text-color);
+	font-size: 1.5rem;
+	border-bottom: 1px solid var(--border-color);
+	padding-bottom: 15px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: var(--text-color);
+	font-weight: 500;
+}
+
+.form-control {
+	width: 100%;
+	padding: 12px 15px;
+	background-color: var(--input-bg);
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	color: var(--text-color);
+	font-size: 1rem;
+	transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+	outline: none;
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 3px rgba(109, 91, 186, 0.2);
+}
+
+textarea.form-control {
+	min-height: 150px;
+	resize: vertical;
+}
+
+.help-text {
+	margin-top: 5px;
+	font-size: 0.85rem;
+	color: var(--text-light);
+}
+
+.form-actions {
+	display: flex;
+	gap: 15px;
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid var(--border-color);
+}
+
+/* Video preview styles */
+.video-preview {
+	margin-top: 15px;
+	border-radius: 8px;
+	overflow: hidden;
+	max-width: 100%;
+	background-color: #f0f0f0;
+}
+
+.video-container {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+	height: 0;
+	overflow: hidden;
+}
+
+.video-container iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+/* Validation styles */
+.error-message {
+	color: var(--danger-color);
+	font-size: 0.9rem;
+	margin-top: 5px;
+}
+
+.input-error {
+	border-color: var(--danger-color);
+}
+
+.input-error:focus {
+	box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+/* Course info panel */
+.course-info-panel {
+	background-color: rgba(109, 91, 186, 0.1);
+	border-left: 4px solid var(--primary-color);
+	padding: 15px;
+	margin-bottom: 25px;
+	border-radius: 0 8px 8px 0;
+}
+
+.course-info-panel h4 {
+	margin: 0 0 10px 0;
+	font-size: 1.1rem;
+	color: var(--primary-color);
+}
+
+.course-info-panel p {
+	margin: 0;
+	font-size: 0.95rem;
+	color: var(--text-color);
+}
+
+/* Info note styles */
+.info-note {
+	padding: 12px 15px;
+	background-color: rgba(109, 91, 186, 0.08);
+	border-left: 4px solid var(--primary-color);
+	margin: 15px 0;
+	border-radius: 0 6px 6px 0;
+	font-size: 0.95rem;
+	color: var(--text-color);
+}
+</style>
+</head>
+
+<body>
+	<!-- Header with navigation -->
+	<header class="main-header">
+		<div class="container">
+			<div class="nav-container">
+				<a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn
+				</a>
+				<button class="mobile-menu-button" id="menuToggle">
+					<i class="fas fa-bars"></i>
+				</button>
+
+				<nav class="main-nav">
+					<ul id="navLinks">
+						<li><a th:href="@{/courses}"
+							th:class="${activePage == 'courses'} ? 'active' : ''">All
+								Courses</a></li>
+						<li><a th:href="@{/enrolled-courses}"
+							th:class="${activePage == 'enrolled-courses'} ? 'active' : ''">My
+								Courses</a></li>
+						<li><a th:href="@{/admin/courses}"
+							th:class="${activePage == 'admin'} ? 'active' : ''">Admin</a></li>
+						<li class="nav-item-logout">
+							<form th:action="@{/logout}" method="post" class="logout-form">
+								<button type="submit" class="logout-btn">
+									<i class="fas fa-sign-out-alt"></i> Logout
+								</button>
+							</form>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+	<!-- Admin header banner -->
+	<div class="admin-header">
+		<div class="container">
+			<h2>
+				<i class="fas fa-edit" th:if="${isEditMode}"></i> <i
+					class="fas fa-plus-circle" th:unless="${isEditMode}"></i> <span
+					th:text="${isEditMode ? 'Edit Lesson' : 'Add New Lesson'}">Lesson
+					Form</span>
+			</h2>
+		</div>
+	</div>
+
+	<div class="container">
+		<!-- Course Information (if adding a lesson to a specific course) -->
+		<div class="course-info-panel" th:if="${course != null}">
+			<h4>
+				Adding lesson to course: <span th:text="${course.title}">Course
+					Title</span>
+			</h4>
+			<p th:text="${#strings.abbreviate(course.description, 150)}">Course
+				description...</p>
+			<a th:href="@{/admin/courses/edit/{id}(id=${course.id})}"
+				class="btn btn-sm btn-outline mt-2"> <i
+				class="fas fa-arrow-left"></i> Back to Course
+			</a>
+		</div>
+
+		<div class="form-container">
+			<h3 class="form-title"
+				th:text="${isEditMode ? 'Edit Lesson: ' + lesson.title : 'Create a New Lesson'}">
+				Lesson Form</h3>
+
+			<!-- Info note about automatic ordering -->
+			<div class="info-note" th:if="${!isEditMode}">
+				<i class="fas fa-info-circle"></i> This lesson will be automatically
+				added to the end of the course. You can view and manage all lessons
+				from the course edit page.
+			</div>
+
+			<form th:action="@{/admin/lessons/save}" method="post"
+				th:object="${lesson}">
+				<!-- Hidden fields for edit mode and course relationship -->
+				<input type="hidden" th:if="${isEditMode}" th:field="*{id}" /> <input
+					type="hidden" th:field="*{courseId}" />
+				<!-- Hidden field for order index, will be set automatically in the controller -->
+				<input type="hidden" th:field="*{orderIndex}" />
+
+				<div class="form-group">
+					<label for="title">Lesson Title *</label> <input type="text"
+						id="title" class="form-control" th:field="*{title}" required
+						th:classappend="${#fields.hasErrors('title')} ? 'input-error' : ''">
+					<div class="error-message" th:if="${#fields.hasErrors('title')}"
+						th:errors="*{title}">Title error</div>
+					<div class="help-text">Choose a clear, descriptive title for
+						this lesson (maximum 100 characters)</div>
+				</div>
+
+				<div class="form-group">
+					<label for="content">Lesson Content</label>
+					<textarea id="content" class="form-control" th:field="*{content}"
+						th:classappend="${#fields.hasErrors('content')} ? 'input-error' : ''"></textarea>
+					<div class="error-message" th:if="${#fields.hasErrors('content')}"
+						th:errors="*{content}">Content error</div>
+					<div class="help-text">Provide the full content of this
+						lesson (maximum 10000 characters)</div>
+				</div>
+
+				<div class="form-group">
+					<label for="introVideoId">Video ID</label> <input type="text"
+						id="introVideoId" class="form-control" th:field="*{introVideoId}"
+						th:classappend="${#fields.hasErrors('introVideoId')} ? 'input-error' : ''">
+					<div class="error-message"
+						th:if="${#fields.hasErrors('introVideoId')}"
+						th:errors="*{introVideoId}">Video ID error</div>
+					<div class="help-text">Enter a YouTube video ID (e.g.,
+						"dQw4w9WgXcQ" from https://www.youtube.com/watch?v=dQw4w9WgXcQ)</div>
+
+					<!-- Video preview -->
+					<div class="video-preview" id="videoPreviewContainer"
+						style="display: none;">
+						<div class="video-container">
+							<iframe id="videoPreview" frameborder="0" allowfullscreen></iframe>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">
+						<i class="fas fa-save"></i> <span
+							th:text="${isEditMode ? 'Update Lesson' : 'Create Lesson'}">Save</span>
+					</button>
+					<a th:href="@{/admin/courses/edit/{id}(id=${lesson.courseId})}"
+						class="btn btn-outline"> <i class="fas fa-times"></i> Cancel
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="copyright">
+				<p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- JavaScript for mobile menu and video preview -->
+	<script>
+		document
+				.addEventListener(
+						'DOMContentLoaded',
+						function() {
+							// Mobile menu toggle
+							const mobileMenuBtn = document
+									.querySelector('.mobile-menu-button');
+							const mainNav = document.querySelector('.main-nav');
+
+							if (mobileMenuBtn) {
+								mobileMenuBtn.addEventListener('click',
+										function() {
+											mainNav.classList.toggle('active');
+											mobileMenuBtn.classList
+													.toggle('active');
+										});
+							}
+
+							// Video preview functionality
+							const videoIdInput = document
+									.getElementById('introVideoId');
+							const videoPreview = document
+									.getElementById('videoPreview');
+							const videoPreviewContainer = document
+									.getElementById('videoPreviewContainer');
+
+							if (videoIdInput && videoPreview) {
+								// Function to update video preview
+								function updateVideoPreview() {
+									const videoId = videoIdInput.value.trim();
+									if (videoId) {
+										// Extract video ID if user pastes full URL
+										let cleanVideoId = videoId;
+										if (videoId
+												.includes('youtube.com/watch?v=')) {
+											const url = new URL(videoId);
+											cleanVideoId = url.searchParams
+													.get('v');
+										} else if (videoId
+												.includes('youtu.be/')) {
+											cleanVideoId = videoId
+													.split('youtu.be/')[1];
+											if (cleanVideoId.includes('?')) {
+												cleanVideoId = cleanVideoId
+														.split('?')[0];
+											}
+										}
+
+										if (cleanVideoId) {
+											videoPreview.src = `https://www.youtube.com/embed/${cleanVideoId}`;
+											videoPreviewContainer.style.display = 'block';
+										} else {
+											videoPreviewContainer.style.display = 'none';
+										}
+									} else {
+										videoPreviewContainer.style.display = 'none';
+									}
+								}
+
+								// Show preview on input change
+								videoIdInput.addEventListener('input',
+										updateVideoPreview);
+
+								// Initialize preview if video ID exists on page load
+								updateVideoPreview();
+							}
+						});
+	</script>
+</body>
+</html>

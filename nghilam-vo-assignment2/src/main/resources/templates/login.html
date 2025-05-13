@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LumiLearn</title>
+    <link rel="icon" type="image/png" th:href="@{/images/idea.png}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        /* Additional styles specifically for the login page */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 180px); /* Account for header and footer */
+            padding: 2rem 0;
+        }
+        
+        .auth-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+        
+        .auth-form input[type="text"],
+        .auth-form input[type="password"],
+        .auth-form input[type="email"] {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: rgba(31, 41, 55, 0.8);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .auth-form input[type="text"]:focus,
+        .auth-form input[type="password"]:focus,
+        .auth-form input[type="email"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .auth-form .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        .auth-error {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger-color);
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <header class="main-header">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="logo">
+                    <i class="fas fa-lightbulb"></i>LumiLearn
+                </a>
+                <button class="mobile-menu-button" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                    <ul id="navLinks">
+                        <li><a th:href="@{/courses}" th:class="${activePage == 'courses'} ? 'active' : ''">All Courses</a></li>
+                        <li><a th:href="@{/enrolled-courses}" th:class="${activePage == 'enrolled-courses'} ? 'active' : ''">My Courses</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Login to LumiLearn</h2>
+                <p>Welcome back! Please enter your credentials to continue.</p>
+            </div>
+            
+            <!-- Display error message if there is one -->
+            <div th:if="${param.error}" class="auth-error">
+                <p>Invalid username or password. Please try again.</p>
+            </div>
+            
+            <!-- Display logout message if user just logged out -->
+            <div th:if="${param.logout}" class="auth-success">
+                <p>You have been logged out successfully.</p>
+            </div>
+            
+            <form class="auth-form" th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a th:href="@{/signup}">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="copyright">
+                <p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Basic JavaScript for mobile menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-button');
+            const mainNav = document.querySelector('.main-nav');
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
+                    mobileMenuBtn.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
