@@ -6,6 +6,8 @@ INSERT INTO sec_role (roleName) VALUES ('ROLE_GUEST');
 -- Insert default admin account (password: 123)
 INSERT INTO sec_user (email, encryptedPassword)
 VALUES ('admin@admin.com', '$2y$10$FKdXgCzUyAMVNxtmCEkUUuS4BWLieImGyw/MVqY2j2TQ6KPsb18Wi');
+INSERT INTO sec_user (email,encryptedPassword)
+VALUES ('student@student.com','$2y$10$K3l78hi9oy0I2Bz2vL.YROpmzPxxgGCoax0S/VLNPPuDwGVmZZCUK');
 INSERT INTO sec_user (userId,email, encryptedPassword)
 VALUES (99,'guest@guest.com', '$2y$10$hnbSSK9JKKpVYbd5FuPK8uhHnmE3HcpO11/KQmzxW09RS8Dk7LKDe');
 
@@ -22,6 +24,11 @@ VALUES (
     (SELECT roleId FROM sec_role WHERE roleName = 'ROLE_USER')
 );
 
+INSERT INTO user_role (userId, roleId)
+VALUES (
+    (SELECT userId FROM sec_user WHERE email = 'student@student.com'),
+    (SELECT roleId FROM sec_role WHERE roleName = 'ROLE_USER')
+);
 
 -- Sample Courses
 INSERT INTO Course (title, description, image_url) VALUES
