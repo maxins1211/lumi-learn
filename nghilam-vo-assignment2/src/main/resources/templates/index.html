@@ -1,472 +1,469 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LumiLearn - Expand Your Knowledge</title>
-    <link rel="icon" type="image/png" th:href="@{/images/idea.png}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" th:href="@{/images/idea.png}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-        :root {
-            /* Primary Colors */
-            --primary-color: #8b5cf6; /* Vibrant purple */
-            --primary-hover: #a78bfa; /* Lighter purple */
-            --secondary-color: #4f46e5; /* Indigo */
-            
-            /* Background Colors */
-            --dark-bg: #111827; /* Dark blue-gray background */
-            --card-bg: #1f2937; /* Medium blue-gray card background */
-            --border-color: #374151; /* Darker blue-gray border */
-            
-            /* Text Colors */
-            --text-color: #f3f4f6; /* Bright off-white text */
-            --text-light: #b0b7c4; /* Light blue-gray text */
-            
-            /* Accent Colors */
-            --success-color: #10b981; /* Keep same green */
-            --accent-color: #f59e0b; /* Keep same amber */
-            --danger-color: #ef4444; /* Keep same red */
-            --info-color: #60a5fa; /* Slightly lighter blue */
-            
-            /* Effects */
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-            
-            /* Code Highlighting */
-            --code-bg: #272c36;
-            --code-text: #e5e7eb;
-            
-            /* Highlight Color for Selected Text */
-            --highlight-bg: rgba(139, 92, 246, 0.3);
+      :root {
+        /* Primary Colors */
+        --primary-color: #8b5cf6; /* Vibrant purple */
+        --primary-hover: #a78bfa; /* Lighter purple */
+        --secondary-color: #4f46e5; /* Indigo */
+
+        /* Background Colors */
+        --dark-bg: #111827; /* Dark blue-gray background */
+        --card-bg: #1f2937; /* Medium blue-gray card background */
+        --border-color: #374151; /* Darker blue-gray border */
+
+        /* Text Colors */
+        --text-color: #f3f4f6; /* Bright off-white text */
+        --text-light: #b0b7c4; /* Light blue-gray text */
+
+        /* Accent Colors */
+        --success-color: #10b981; /* Keep same green */
+        --accent-color: #f59e0b; /* Keep same amber */
+        --danger-color: #ef4444; /* Keep same red */
+        --info-color: #60a5fa; /* Slightly lighter blue */
+
+        /* Effects */
+        --shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+        /* Code Highlighting */
+        --code-bg: #272c36;
+        --code-text: #e5e7eb;
+
+        /* Highlight Color for Selected Text */
+        --highlight-bg: rgba(139, 92, 246, 0.3);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--dark-bg);
+      }
+
+      a {
+        text-decoration: none;
+        color: var(--primary-color);
+      }
+
+      /* Layout containers */
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header and navigation */
+      .main-header {
+        background: var(--card-bg);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .logo i {
+        margin-right: 8px;
+        color: var(--primary-color);
+      }
+
+      .logo:hover {
+        color: var(--primary-hover);
+      }
+
+      .logo:hover i {
+        color: var(--primary-hover);
+      }
+
+      .main-nav ul {
+        display: flex;
+        list-style: none;
+        align-items: center;
+      }
+
+      .main-nav li {
+        margin-left: 30px;
+      }
+
+      .main-nav a {
+        color: var(--text-color);
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .main-nav a:hover,
+      .main-nav a.active {
+        color: var(--primary-color);
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+        border: 2px solid var(--primary-color);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text-color);
+        border: 2px solid var(--text-light);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+
+      .mobile-menu-button {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-color);
+      }
+
+      /* Hero Section */
+      .hero-section {
+        background: linear-gradient(
+            135deg,
+            rgba(58, 80, 107, 0.9) 0%,
+            rgba(109, 91, 186, 0.8) 100%
+          ),
+          url("../images/hero-bg.jpg") right/cover no-repeat;
+        padding: 120px 0;
+        text-align: center;
+        margin-bottom: 60px;
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-container {
+        max-width: 800px;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1.2;
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-light);
+        margin-bottom: 40px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .hero-buttons .btn {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+      }
+
+      /* Footer */
+      .footer {
+        background-color: var(--card-bg);
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .copyright {
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+
+      /* Auth Forms */
+      .auth-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 76px - 60px);
+        padding: 40px 0;
+      }
+
+      .auth-container {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        padding: 35px;
+        width: 100%;
+        max-width: 450px;
+      }
+
+      .auth-header {
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .auth-title {
+        font-size: 2rem;
+        color: var(--text-color);
+        margin-bottom: 10px;
+      }
+
+      .auth-subtitle {
+        color: var(--text-light);
+        font-size: 1rem;
+      }
+
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .form-group label {
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      .form-group input {
+        padding: 12px 15px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .auth-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .auth-actions a {
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .auth-actions a:hover {
+        color: var(--primary-hover);
+      }
+
+      .form-submit {
+        margin-top: 15px;
+      }
+
+      .form-submit .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        text-align: center;
+      }
+
+      .auth-footer {
+        margin-top: 25px;
+        text-align: center;
+        color: var(--text-light);
+      }
+
+      .auth-footer a {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+
+      .auth-footer a:hover {
+        color: var(--primary-hover);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-nav {
+          position: fixed;
+          top: 70px;
+          left: 0;
+          width: 100%;
+          background-color: var(--card-bg);
+          padding: 20px;
+          box-shadow: 0 15px 15px rgba(0, 0, 0, 0.1);
+          display: none;
+          z-index: 99;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--dark-bg);
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
-        }
-
-        /* Layout containers */
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header and navigation */
-        .main-header {
-            background: var(--card-bg);
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .logo i {
-            margin-right: 8px;
-            color: var(--primary-color);
-        }
-
-        .logo:hover {
-            color: var(--primary-hover);
-        }
-
-        .logo:hover i {
-            color: var(--primary-hover);
+        .main-nav.active {
+          display: block;
         }
 
         .main-nav ul {
-            display: flex;
-            list-style: none;
-            align-items: center;
+          flex-direction: column;
+          align-items: flex-start;
         }
 
         .main-nav li {
-            margin-left: 30px;
-        }
-
-        .main-nav a {
-            color: var(--text-color);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .main-nav a:hover, .main-nav a.active {
-            color: var(--primary-color);
+          margin: 10px 0;
+          width: 100%;
         }
 
         .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            display: inline-block;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            border: 2px solid var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            border-color: var(--primary-hover);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--text-color);
-            border: 2px solid var(--text-light);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+          margin-top: 15px;
+          gap: 10px;
         }
 
         .mobile-menu-button {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(58, 80, 107, 0.9) 0%, rgba(109, 91, 186, 0.8) 100%), 
-                        url('../images/hero-bg.jpg') right/cover no-repeat;
-            padding: 120px 0;
-            text-align: center;
-            margin-bottom: 60px;
-            min-height: calc(100vh - 200px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-container {
-            max-width: 800px;
+          display: block;
         }
 
         .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+          font-size: 2.2rem;
         }
 
         .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+          flex-direction: column;
+          align-items: center;
         }
 
         .hero-buttons .btn {
-            padding: 12px 25px;
-            font-size: 1.1rem;
+          width: 100%;
+          max-width: 300px;
         }
-
-        /* Footer */
-        .footer {
-            background-color: var(--card-bg);
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        .copyright {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        /* Auth Forms */
-        .auth-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 76px - 60px); 
-            padding: 40px 0;
-        }
-
-        .auth-container {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 35px;
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .auth-header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .auth-title {
-            font-size: 2rem;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
-
-        .auth-subtitle {
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .form-group input {
-            padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .auth-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .auth-actions a {
-            color: var(--primary-color);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .auth-actions a:hover {
-            color: var(--primary-hover);
-        }
-
-        .form-submit {
-            margin-top: 15px;
-        }
-
-        .form-submit .btn {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        .auth-footer {
-            margin-top: 25px;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        .auth-footer a {
-            color: var(--primary-color);
-            font-weight: 500;
-        }
-
-        .auth-footer a:hover {
-            color: var(--primary-hover);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-nav {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background-color: var(--card-bg);
-                padding: 20px;
-                box-shadow: 0 15px 15px rgba(0, 0, 0, 0.1);
-                display: none;
-                z-index: 99;
-            }
-
-            .main-nav.active {
-                display: block;
-            }
-
-            .main-nav ul {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .main-nav li {
-                margin: 10px 0;
-                width: 100%;
-            }
-
-            .auth-buttons {
-                margin-top: 15px;
-                gap: 10px;
-            }
-
-            .mobile-menu-button {
-                display: block;
-            }
-
-            .hero-title {
-                font-size: 2.2rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .hero-buttons .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Header -->
     <header class="main-header">
-        <div class="container nav-container">
-            <a href="/" class="logo">
-                <i class="fas fa-lightbulb"></i>LumiLearn
-            </a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="/" class="active">Home</a></li>
-                    <li><a href="/courses">Courses</a></li>
-                    <li><a href="/">About</a></li>
-                    <li><a href="/">Contact</a></li>
-                    <li class="auth-buttons">
-                        <a href="/login" class="btn btn-outline">Login</a>
-                        <a href="/signup" class="btn btn-primary">Sign Up</a>
-                    </li>
-                </ul>
-            </nav>
-            <button class="mobile-menu-button">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+      <div class="container nav-container">
+        <a href="/" class="logo"> <i class="fas fa-lightbulb"></i>LumiLearn </a>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/courses">Courses</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="/">Contact</a></li>
+            <li class="auth-buttons">
+              <a href="/login" class="btn btn-outline">Login</a>
+              <a href="/signup" class="btn btn-primary">Sign Up</a>
+            </li>
+          </ul>
+        </nav>
+        <button class="mobile-menu-button">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container hero-container">
-            <h1 class="hero-title">Expand Your Knowledge with Interactive Courses</h1>
-            <p class="hero-subtitle">Unlock your potential with our comprehensive learning platform designed to help you master new skills at your own pace.</p>
-            <div class="hero-buttons">
-                <a href="/courses" id="exploreCoursesBtn" class="btn btn-primary">Explore Courses</a>
-            </div>
+      <div class="container hero-container">
+        <h1 class="hero-title">
+          Expand Your Knowledge with Interactive Courses
+        </h1>
+        <p class="hero-subtitle">
+          Unlock your potential with our comprehensive learning platform
+          designed to help you master new skills at your own pace.
+        </p>
+        <div class="hero-buttons">
+          <a href="/courses" id="exploreCoursesBtn" class="btn btn-primary"
+            >Explore Courses</a
+          >
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="copyright">
-                <p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
-            </div>
+      <div class="container">
+        <div class="copyright">
+          <p>&copy; 2025 LumiLearn by Nghi Lam Vo</p>
         </div>
+      </div>
     </footer>
 
     <!-- JavaScript for mobile menu and auth handling -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuBtn = document.querySelector('.mobile-menu-button');
-            const mainNav = document.querySelector('.main-nav');
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector(".mobile-menu-button");
+        const mainNav = document.querySelector(".main-nav");
 
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mainNav.classList.toggle('active');
-                    mobileMenuBtn.classList.toggle('active');
-                });
-            }
-
-            // Check if user is authenticated (This is a placeholder - implement your auth check)
-            const isAuthenticated = false; // Set to false by default
-            
-            // Handle Explore Courses button click
-            const exploreCoursesBtn = document.getElementById('exploreCoursesBtn');
-            if (exploreCoursesBtn) {
-                exploreCoursesBtn.addEventListener('click', function(e) {
-                    if (!isAuthenticated) {
-                        e.preventDefault();
-                        window.location.href = '/signup';
-                    } else {
-                        window.location.href = '/courses';
-                    }
-                });
-            }
-        });
+        if (mobileMenuBtn) {
+          mobileMenuBtn.addEventListener("click", function () {
+            mainNav.classList.toggle("active");
+            mobileMenuBtn.classList.toggle("active");
+          });
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
